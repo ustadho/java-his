@@ -1,0 +1,21 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Sep 18, 2014, 6:29:14 PM
+    Author     : faheem
+*/
+body {
+    min-height: 2000px;
+    padding-top: 70px;
+}
+
+.modal.modal-wide .modal-dialog {
+    width: 90%;
+}
+.modal-wide .modal-body {
+    overflow-y: auto;
+}
+#formModal .modal-body p { margin-bottom: 900px }

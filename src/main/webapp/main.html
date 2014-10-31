@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+
+        <meta charset="utf-8">
+
+        <title>Sistem Informasi Klinik</title>
+
+        <!-- Core CSS - Include with every page -->
+        <!--<link href="css/bootstrap-combined.min.css" rel="stylesheet">-->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+        <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+        <!-- Page-Level Plugin CSS - Blank -->
+
+        <!-- SB Admin CSS - Include with every page -->
+        <link href="css/sb-admin.css" rel="stylesheet">
+        <link href="css/select2.css" rel="stylesheet"/>
+        <link href="js/lib/select/select.css" rel="stylesheet">
+        <link href="css/loading-bar.css" rel="stylesheet"/>
+        <!--<link rel="shortcut icon" type="image/ico" href="img/siloam_favicon.ico" />-->
+
+        <!-- css kita sendiri -->
+        <link href="css/aplikasi.css" rel="stylesheet">
+    </head>
+
+    <body ng-app="hisApp" >
+        <div id="loading">Loading...</div>
+        <div id="row">
+
+            <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">
+                        <!--<img alt="Klinik" src="img/logo-transparent.png" />--> 
+                        <span>Klinik</span>
+                    </a>
+                </div>
+                <!-- /.navbar-header -->
+
+                <ul class="nav navbar-top-links navbar-right">
+                    <!-- /.dropdown -->
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            User : {{ userinfo.user}} | {{userinfo.kodeDokter==''? '': userinfo.namaDokter}} | Group : {{ userinfo.group}}
+                            <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                            </li>
+                            <li><a href="#/system/ubah-password"><i class="fa fa-gear fa-fw"></i> Ubah Password</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li><a href="j_spring_security_logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                            </li>
+                        </ul>
+                        <!-- /.dropdown-user -->
+                    </li>
+                    <!-- /.dropdown -->
+                </ul>
+                <!-- /.navbar-top-links -->
+
+            </nav>
+            <!-- /.navbar-static-top -->
+
+            <nav class="navbar-default navbar-static-side" role="navigation">
+                <div class="sidebar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+                        <li >
+                            <a href="#"><i class="fa fa-ambulance fa-fw"></i> Rawat Jalan<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="#/op/appointment">Reservasi</a>
+                                </li>
+                                <li>
+                                    <a href="#/op/registrasi">Registrasi</a>
+                                </li>
+                                <li>
+                                    <a href="#/item/resep">Resep</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-files-o fa-fw"></i> Berkas Pasien<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="#/pasien/open-visit">Buka Kunjungan</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-puzzle-piece fa-fw"></i> Pembelian<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="#">Item<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li><a href="#/master/item">Item Obat/ Alkes</a></li>
+                                        <li><a href="#/master/item-brand">Item Brand</a></li>
+                                        <li><a href="#/master/item-kategori">Kategori Item</a></li>
+                                        <li><a href="#/master/item-manufaktur">Manufaktur</a></li>
+                                        <li><a href="#/master/item-satuan">Satuan</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li class="active">
+                            <a href="#"><i class="fa fa-list fa-fw"></i>Administrasi<span class="fa arrow"></span></a>
+
+                            <ul class="nav nav-second-level">
+                                <li><a href="#/master/kota">Kota</a></li>
+                                <li><a href="#/master/title">Title</a></li>
+                                <li class="active">
+                                    <a href="#">HR<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li><a href="#/hr/hr-profile">HR Profile</a></li>
+                                        <li><a href="#/hr/pegawai">Pegawai</a></li>
+                                        <li><a href="#/hr/spesialisasi">Spesialisasi</a></li>
+                                    </ul>
+                                </li>
+                                <li class="active">
+                                    <a href="#">Service<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li><a href="#/service/item-service">Service Master</a></li>
+                                        <li><a href="#/service/pegawai">Pegawai</a></li>
+                                        <li><a href="#/service/spesialisasi">Spesialisasi</a></li>
+                                    </ul>
+                                </li>
+                                <li >
+                                    <a href="#">Konfigurasi<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li><a href="#/config/organisasi">Organisasi</a></li>
+                                        <li><a href="#/config/user">User</a></li>
+                                        <li><a href="#/config/menu">Menu</a></li>
+                                        <li><a href="#/config/role">Role</a></li>
+                                        <li><a href="#/config/otorisasi-menu">Otorisasi Menu</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+
+                        </li>
+                        <li>
+                            <a href="tables.html"><i class="fa fa-table fa-fw"></i> Laporan</a>
+                        </li>
+                    </ul>
+                    <!-- /#side-menu -->
+                </div>
+                <!-- /.sidebar-collapse -->
+            </nav>
+            <!-- /.navbar-static-side -->
+
+            <div id="page-wrapper" ng-view>
+
+            </div>
+            <!-- /#page-wrapper -->
+        </div>
+        <!-- /#wrapper -->
+
+        <!-- Core Scripts - Include with every page -->
+        <script src="js/lib/jquery.min.js"></script>
+        <script src="js/lib/bootstrap.min.js"></script>
+        <script src="js/lib/ie10-viewport-bug-workaround.js"></script>
+        <script src="js/lib/angular.min.js"></script>
+        <script src="js/lib/angular-resource.min.js"></script>
+        <script src="js/lib/angular-cookies.min.js"></script>
+        <script src="js/lib/angular-sanitize.min.js"></script>
+        <script src="js/lib/angular-touch.min.js"></script>
+        <script src="js/lib/angular-route.min.js"></script>
+        <script src="js/lib/angular-animate.min.js"></script>
+        <script src="js/lib/angular-touch.min.js"></script>
+        <script src="js/lib/angular-sanitize.min.js"></script>
+        <script src="js/lib/ui-bootstrap-tpls.min.js"></script>
+        <script src="js/lib/ui-utils.min.js"></script>
+        <script src="js/lib/bootbox.js"></script>
+        <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+        <script src="js/lib/select/select.js"></script>
+        <!--<script src="js/underscore-min.js"></script>-->
+        <script src="js/lib/ng-upload.min.js"></script>
+        <script src="js/lib/TweenMax.min.js"></script>
+        <script src="js/lib/loading-bar.js"></script>
+        <script src="js/sb-admin.js"></script>
+        <script src="js/custom/custom-timepicker.js"></script>
+        <script src="js/custom/custom-timepicker-tpl.js"></script>
+
+        <!-- script kita sendiri -->
+        <script src="js/aplikasi.js"></script>
+        <!--    Controller-->
+        <script src="js/controller/item-brand.js"></script>
+        <script src="js/controller/item-kategori.js"></script>
+        <script src="js/controller/item-manufaktur.js"></script>
+        <script src="js/controller/item-satuan.js"></script>
+        <script src="js/controller/item-master.js"></script>
+        <script src="js/controller/organisasi.js"></script>
+        <script src="js/controller/kota.js"></script>
+        <script src="js/controller/hr-profile.js"></script>
+        <script src="js/controller/spesialisasi.js"></script>
+        <script src="js/controller/pegawai.js"></script>
+        <script src="js/controller/title.js"></script>
+
+        <!--    Service-->
+        <script src="js/service/item-brand-service.js"></script>
+        <script src="js/service/item-kategori-service.js"></script>
+        <script src="js/service/item-manufaktur-service.js"></script>
+        <script src="js/service/item-satuan-service.js"></script>
+        <script src="js/service/item-master-service.js"></script>
+        <script src="js/service/organisasi-service.js"></script>
+        <script src="js/service/kota-service.js"></script>
+        <script src="js/service/hr-profile-service.js"></script>
+        <script src="js/service/spesialisasi-service.js"></script>
+        <script src="js/service/pegawai-service.js"></script>
+        <script src="js/service/title-service.js"></script>
+    </body>
+
+</html>

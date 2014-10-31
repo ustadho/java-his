@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reg-per-dokter" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5446be74-cfb0-47d1-8df5-be2ec84fb66b">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="dokter" class="java.lang.String"/>
+	<field name="norm" class="java.lang.String"/>
+	<field name="no_reg" class="java.lang.String"/>
+	<field name="pasien" class="java.lang.String"/>
+	<field name="tgl_masuk" class="java.util.Date"/>
+	<variable name="nomor" class="java.lang.Integer" resetType="Group" resetGroup="dokter" calculation="Count">
+		<variableExpression><![CDATA[$F{no_reg}]]></variableExpression>
+	</variable>
+	<group name="dokter">
+		<groupExpression><![CDATA[$F{dokter}]]></groupExpression>
+		<groupHeader>
+			<band height="35">
+				<textField>
+					<reportElement x="109" y="0" width="446" height="20" uuid="6daa6d82-0402-4ade-ab98-d3db4bd14701"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{dokter}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="0" width="109" height="20" uuid="76808aa1-8705-4f4b-bd5d-af83274275da"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Dokter]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="50"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="24" uuid="97b14d8c-ebf7-4e0c-a3fb-e2058afece55"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Laporan Kunjungan Pasien]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="33" y="0" width="47" height="21" uuid="d2c7e23d-f2bd-4cfd-9764-5a312530552f"/>
+				<textFieldExpression><![CDATA[$F{tgl_masuk}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="1" width="80" height="20" uuid="c3fb7767-eb19-4b99-ae02-b739d697b4b5"/>
+				<textFieldExpression><![CDATA[$F{no_reg}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="1" width="80" height="20" uuid="cd016616-386e-4ad6-9733-606365226637"/>
+				<textFieldExpression><![CDATA[$F{norm}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="240" y="1" width="315" height="20" uuid="6be5a76c-4f58-4a3a-a857-54caeb499318"/>
+				<textFieldExpression><![CDATA[$F{pasien}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="1" width="33" height="20" uuid="c80822b9-87fd-4d52-8a9e-2535ad504d37"/>
+				<textFieldExpression><![CDATA[$V{nomor}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="17" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,297 @@
+<div class="row">		
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading fa-2x">
+                Item Master
+            </div> <!--panel heading-->
+
+            <div class="panel-body col-md-12">
+                <div class=" form-group input-group">
+                    <input id="search" type="text" class="col-md-2 form-control" ng-model="search" ng-enter="reloadData()" placeholder="Masukkan pencarian" autofocus>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" ng-click="reloadData()"><i class="glyphicon glyphicon-search"></i>
+                        </button>
+                    </span>
+                    <span class="input-group-btn col-lg-5"></span>
+                    <span class="input-group-btn col-md-2">
+                        <button class="btn btn-primary glyphicon glyphicon-plus" type="button" ng-click="clear()" data-toggle="modal" data-target="#formModal">
+                            Tambah
+                        </button>
+                    </span>
+                </div>
+
+            </div>
+            <div class="panel-body" id="coa-list">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover" id="example">
+                        <thead>
+                            <tr>
+                                <th>Kode</th>
+                                <th>Brand</th>
+                                <th>Nama Item</th>
+                                <th>Kategori</th>
+                                <th>Medical</th>
+                                <th>Aktif</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead>   
+                        <tbody>
+                            <tr ng-repeat="i in dataPage.content| orderBy:nama">
+                                <td>{{i.kode}}</td>
+                                <td>{{i.brand.nama}}</td>
+                                <td>{{i.nama}}</td>
+                                <td>{{i.kategori.nama}}</td>
+                                <td>{{i.medical| checkmark}}</td>
+                                <td>{{i.aktif| checkmark}}</td>
+                                <td class="center">
+                                    <a href="" ng-click="edit(i)">
+                                        <i class="glyphicon glyphicon-edit">Ubah</i>  
+
+                                    </a>  &nbsp;
+                                    <a href="" ng-click="remove(i)">
+                                        <i class="glyphicon glyphicon-remove"></i> 
+                                        Hapus
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div align="center">
+                    <pagination total-items="paging.totalItems" ng-model="paging.currentPage" items-per-page="paging.maxSize" max-size="10" class="pagination-sm" boundary-links="true" ng-change="reloadData()" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+
+                    <pre>Page: {{paging.currentPage}} / {{paging.maxPage}}</pre>
+                </div>
+
+            </div>
+            
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog custom-modal">
+        <div class="modal-content">
+            <div class="modal-header custom-modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">{{formTitle}}</h4>
+            </div>
+
+            <div class="modal-body custom-modal-body">
+                <form class="form-horizontal" name="formEdit" id="formEdit">
+                    <div>
+                        <table class="table-condensed" border="0" cellspacing="2" cellpadding="2" width="100%">
+                            <tr>
+                                <td style="width: 23%">
+                                    &nbsp;
+                                </td>
+                                <td style="width: 20%">
+                                    <label>
+                                        <input type="radio" id="medical" name="medical" ng-model="currentRecord.medical" ng-checked="currentRecord.medical" ng-click="changeMedical(true)" required>&nbsp;Medical
+                                    </label>
+                                </td>
+                                <td style="width: 20%">&nbsp;</td>
+                                <td style="width: 37%">
+                                    <label>
+                                        <input type="radio" id="medical" name="medical" ng-model="currentRecord.medical" ng-checked="currentRecord.medical === false" ng-click="changeMedical(false)" required>&nbsp;Non Medical
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Kode</label>
+                                </td>
+                                <td>
+                                    <input type="text" id="kode" name="kode" ng-model="currentRecord.kode" class="form-control" autofocus required/>
+                                    <span ng-show="formEdit.kode.$error.required" style="float:right; color:white" class="help-block label label-danger">Harus Diisi</span>
+                                </td>
+                                <td ">
+                                    <label>&nbsp;&nbsp;Brand</label>
+                                </td>
+                                <td ">
+                                    <div>
+                                        <ui-select ng-model="brand.selected" theme="select2" style="min-width: 100%;" id="cmbBrand" name="cmbBrand" required='currentRecord.medical'>
+                                            <ui-select-match placeholder="Pilih Item Brand">{{$select.selected.nama}}</ui-select-match>
+                                            <ui-select-choices repeat="b in itemBrands | propsFilter: {nama: $select.search, keterangan: $select.search}">
+                                                <div ng-bind-html="b.nama | highlight: $select.search"></div>
+                                                <small>
+                                                    keterangan: {{b.keterangan}}
+                                                </small>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                    <span ng-show="formEdit.cmbBrand.$error.required" style="float:right; color:white" class="help-block label label-danger">Pilih Salah Satu</span>
+                                </td>
+                            </tr>
+                            <tr "> 
+                                <td>
+                                    <label>Manufaktur</label>
+                                </td>
+                                <td colspan="3" style="margin-left: 2em">
+                                    <div>
+                                        <ui-select ng-model="manufaktur.selected" theme="select2" style="min-width: 100%;" id="cmbManufaktur" name="cmbManufaktur" required="currentRecord.medical">
+                                            <ui-select-match placeholder="Pilih Manufaktur">{{$select.selected.nama}}</ui-select-match>
+                                            <ui-select-choices repeat="m in manufakturs | propsFilter: {nama: $select.search, keterangan: $select.search}">
+                                                <div ng-bind-html="m.nama | highlight: $select.search"></div>
+                                                <small>
+                                                    keterangan: {{m.keterangan}}
+                                                </small>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                    <span ng-show="formEdit.cmbManufaktur.$error.required" style="float:right; color:white" class="help-block label label-danger">Pilih Salah Satu</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Nama Item</label>
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" class="form-control" autofocus id="nama" name="nama" ng-model="currentRecord.nama" required/>
+                                    <span ng-show="formEdit.nama.$error.required" style="float:right; color:white" class="help-block label label-danger">Nama Item Harus Diisi</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Kategori</label>
+                                </td>
+                                <td colspan="3">
+                                    <div>
+                                        <ui-select ng-model="kategori.selected" theme="select2" style="min-width: 100%;" id="cmbKategori" name="cmbKategori" required>
+                                            <ui-select-match placeholder="Pilih Kategori">{{$select.selected.nama}}</ui-select-match>
+                                            <ui-select-choices repeat="k in kategoris | propsFilter: {nama: $select.search, keterangan: $select.search}">
+                                                <div ng-bind-html="k.nama | highlight: $select.search"></div>
+                                                <small>
+                                                    keterangan: {{k.keterangan}}
+                                                </small>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                    <span ng-show="formEdit.cmbKategori.$error.required" style="float:right; color:white" class="help-block label label-danger">Pilih Salah Satu</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Satuan</label>
+                                </td>
+                                <td colspan="3">
+                                    <div>
+                                        <ui-select ng-model="satuan.selected" theme="select2" style="min-width: 100%;" id="cmbSatuan" name="cmbSatuan" required>
+                                            <ui-select-match placeholder="Pilih Satuan">{{$select.selected.nama}}</ui-select-match>
+                                            <ui-select-choices repeat="k in satuans | propsFilter: {nama: $select.search, keterangan: $select.search}">
+                                                <div ng-bind-html="k.nama | highlight: $select.search"></div>
+                                                <small>
+                                                    keterangan: {{k.keterangan}}
+                                                </small>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                    <span ng-show="formEdit.cmbSatuan.$error.required" style="float:right; color:white" class="help-block label label-danger">Pilih Salah Satu</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label>Min</label></td>
+                                <td>
+                                    <input style="width: 100px" type="number" class="form-control" id="min" name="min" ng-model="currentRecord.min" required/>
+                                    <span ng-show="formEdit.min.$error.required" style="float:right; color:white" class="help-block label label-danger">Harus Diisi</span>
+                                </td>
+                                <td><label class="control-label">Max</label></td>
+                                <td>
+                                    <div>
+                                        <input style="width: 100px" type="number" class="form-control" id="max" name="max" ng-model="currentRecord.max" required/>
+                                        <span ng-show="formEdit.max.$error.required" style="float:right; color:white" class="help-block label label-danger">Harus Diisi</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label>Reorder Qty</label></td>
+                                <td>
+                                    <input style="width: 100px" type="number" class="form-control" id="reorderQty" name="reorderQty" ng-model="currentRecord.reorderQty" required/>
+                                    <span ng-show="formEdit.reorderQty.$error.required" style="float:right; color:white" class="help-block label label-danger">Harus Diisi</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label>Keterangan</label></td>
+                                <td colspan="3">
+                                    <input type="text" class="form-control" id="keterangan" name="keterangan" ng-model="currentRecord.keterangan"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="panel" ng-hide="!currentRecord.medical" ">
+                        <h5 style="text-align: left; color: blue"> Informasi Medis</h5>
+                        <table class="table-condensed" width="100%">
+                            <tr>
+                                <td style="width: 23%">
+                                    &nbsp;
+                                </td>
+                                <td style="width: 20%">
+                                    <label>
+                                        <input type="radio" id="generik" name="generik" ng-model="currentRecord.generik" ng-checked="currentRecord.generik" ng-click="changeGenerik(true)" required="currentRecord.medical">&nbsp;GENERIK
+                                    </label>
+                                </td>
+                                <td style="width: 20%">&nbsp;</td>
+                                <td style="width: 37%">
+                                    <label>
+                                        <input type="radio" id="generik" name="generik" ng-model="currentRecord.generik" ng-checked="currentRecord.generik == false" ng-click="changeGenerik(false)" required="currentRecord.medical">&nbsp;NON GENERIK
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 23%">
+                                    <label class="control-label">Komposisi</label>
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" class="form-control" ng-model="currentRecord.komposisi"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="control-label">Indikasi</label>
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" class="form-control" ng-model="currentRecord.indikasi"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="control-label">Dosis Pemakaian</label>
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" class="form-control" ng-model="currentRecord.ketDosis"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="control-label">Efek Samping</label>
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" class="form-control" ng-model="currentRecord.efekSamping"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="control-label">Kontra Indikasi</label>
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" class="form-control" ng-model="currentRecord.kontraIndikasi"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </form>
+
+            </div>
+
+            <div class="modal-footer">
+                <label class="control-label">
+                    <input class="right" type="checkbox" id="active" name="active" ng-model="currentRecord.aktif" value="active"> Aktif
+                </label>
+                &nbsp;&nbsp;&nbsp;
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" ng-disabled="isClean() || formEdit.$invalid" ng-click="save()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

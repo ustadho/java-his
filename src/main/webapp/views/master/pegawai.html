@@ -1,0 +1,224 @@
+<div class="row">		
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading fa-2x">
+                Master Pegawai
+            </div> <!--panel heading-->
+
+            <div class="panel-body col-md-12">
+                <div class=" form-group input-group">
+                    <input id="search" type="text" class="col-md-2 form-control" ng-model="search" ng-enter="reloadData()" placeholder="Masukkan pencarian" autofocus>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" ng-click="reloadData()"><i class="glyphicon glyphicon-search"></i>
+                        </button>
+                    </span>
+                    <span class="input-group-btn col-lg-5"></span>
+                    <span class="input-group-btn col-md-2">
+                        <button class="btn btn-primary glyphicon glyphicon-plus" type="button" ng-click="clear()" data-toggle="modal" data-target="#formModal">
+                            Tambah
+                        </button>
+                    </span>
+                </div>
+
+            </div>
+            <div class="panel-body" id="coa-list">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover" id="example">
+                        <thead>
+                            <tr>
+                                <th>NIP</th>
+                                <th>Nama</th>
+                                <th>Profile</th>
+                                <th>Jenis Kelamin</th>
+                                <th>Aktif</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead>   
+                        <tbody>
+                            <tr ng-repeat="i in dataPage.content| orderBy:nama">
+                                <td>{{i.nip}}</td>
+                                <td>{{i.nama}}</td>
+                                <td>{{i.hrProfile.nama}}</td>
+                                <td>{{i.sex==='L'? 'LAKI-LAKI': 'PEREMPUAN'}}</td>
+                                <td>{{i.aktif| checkmark}}</td>
+                                <td class="center">
+                                    <a href="" ng-click="edit(i)">
+                                        <i class="glyphicon glyphicon-edit">Ubah</i>  
+
+                                    </a>  &nbsp;
+                                    <a href="" ng-click="remove(i)">
+                                        <i class="glyphicon glyphicon-remove"></i> 
+                                        Hapus
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div align="center">
+                    <pagination total-items="paging.totalItems" ng-model="paging.currentPage" items-per-page="paging.maxSize" max-size="10" class="pagination-sm" boundary-links="true" ng-change="reloadData()" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+
+                    <pre>Page: {{paging.currentPage}} / {{paging.maxPage}}</pre>
+                </div>
+
+            </div>
+            
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog custom-modal">
+        <div class="modal-content">
+            <div class="modal-header custom-modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">{{formTitle}}</h4>
+            </div>
+
+            <div class="modal-body custom-modal-body">
+                <form class="form-horizontal" name="formEdit" id="formEdit">
+                    <div>
+                        <table class="table-condensed" border="0" cellspacing="2" cellpadding="2" width="100%">
+                            <tr style="vertical-align: top">
+                                <td style="width: 24%">
+                                    <label>NIP</label>
+                                </td>
+                                <td style="width: 26%">
+                                    <input type="text" id="nip" name="nip" ng-model="currentRecord.nip" class="form-control" autofocus required/>
+                                    <span ng-show="formEdit.nip.$error.required" style="float:right; color:white" class="help-block label label-danger">Harus Diisi</span>
+                                    <span style="float:right; color:white" class="help-block label label-danger" ng-show="isNipExists">
+                                        NIP Sudah Dipakai
+                                    </span>
+                                </td>
+                                <td style="width: 24%">
+                                    <label class="control-label">
+                                        <input class="right" type="checkbox" id="active" name="active" ng-model="currentRecord.aktif" value="active"> Aktif
+                                    </label>
+                                </td>
+                                <td style="width: 26%">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr style="vertical-align: top">
+                                <td>
+                                    <label>Nama</label>
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" class="form-control" autofocus id="nama" name="nama" ng-model="currentRecord.nama" required/>
+                                    <span ng-show="formEdit.nama.$error.required" style="float:right; color:white" class="help-block label label-danger">Nama Harus Diisi</span>
+                                </td>
+                            </tr>
+                            <tr style="vertical-align: top">
+                                <td>
+                                    <label>Gelar</label>
+                                </td>
+                                <td colspan="3">
+                                    <input type="text" class="form-control" autofocus id="gelar" name="gelar" ng-model="currentRecord.gelar"/>
+                                </td>
+                            </tr>
+                            
+                            <tr style="vertical-align: top">
+                                <td>
+                                    <label>Jenis Kelamin</label>
+                                </td>
+                                <td colspan="3">
+                                    <div>
+                                       <ui-select ng-model="sex.selected" theme="select2" style="min-width: 100%;" id="cmbSex" name="cmbSex" required>
+                                            <ui-select-match placeholder="Pilih Jenis Kelamin">{{$select.selected.value}}</ui-select-match>
+                                            <ui-select-choices repeat="s in sexs | propsFilter: {value: $select.search}">
+                                                <div ng-bind-html="s.value | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                    <span ng-show="formEdit.cmbSex.$error.required" style="float:right; color:white" class="help-block label label-danger">Pilih Salah Satu</span>
+                                </td>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            
+                            <tr style="vertical-align: top"> 
+                                <td>
+                                    <label>Tmp./ Tgl. Lahir</label>
+                                </td>
+                                <td style="margin-left: 2em" colspan="2">
+                                    <div>
+                                        <ui-select ng-model="kotaLahir.selected" theme="select2" style="min-width: 100%;" id="cmbKota" name="cmbKota" required>
+                                            <ui-select-match placeholder="Pilih Kota">{{$select.selected.nama}}</ui-select-match>
+                                            <ui-select-choices repeat="k in kotas | propsFilter: {nama: $select.search, propinsi: $select.search}">
+                                                <div ng-bind-html="k.nama | highlight: $select.search"></div>
+                                                <small>
+                                                    Propinsi: {{k.propinsi}}
+                                                </small>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                    <span ng-show="formEdit.cmbKota.$error.required" style="float:right; color:white" class="help-block label label-danger">Pilih Salah Satu</span>
+                                </td>
+                                <td >
+                                    <div>
+                                        <p class="input-group">
+                                            <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" 
+                                                   ng-model="currentRecord.tglLahir" is-open="dpTglLahirOpened" name="txtTglLahir"
+                                                   datepicker-options="dateOptions" close-text="Close" id="txtTglLahir" 
+                                                   required/>
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" ng-click="openDPTglLahir($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                            </span>
+                                        </p>
+
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <tr style="vertical-align: top">
+                                <td>
+                                    <label>Tgl Masuk Kerja</label>
+                                </td>
+                                <td>
+                                    <div>
+                                        <p class="input-group">
+                                            <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" 
+                                                   ng-model="currentRecord.tglMasuk" is-open="dpTglMasukOpened" name="txtTglMasuk"
+                                                   datepicker-options="dateOptions" close-text="Close" id="txtTglMasuk" 
+                                                   required/>
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" ng-click="openDPTglMasuk($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                            </span>
+                                        </p>
+
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr style="vertical-align: top">
+                                <td>
+                                    <label>HR Profile</label>
+                                </td>
+                                <td colspan="3">
+                                    <div>
+                                        <ui-select ng-model="hrProfile.selected" theme="select2" style="min-width: 100%;" id="cmbHrProfile" name="cmbHrProfile" required>
+                                            <ui-select-match placeholder="Pilih HR Profile">{{$select.selected.nama}}</ui-select-match>
+                                            <ui-select-choices repeat="p in hrProfiles | propsFilter: {nama: $select.search, keterangan: $select.search}">
+                                                <div ng-bind-html="p.nama | highlight: $select.search"></div>
+                                                <small>
+                                                    keterangan: {{p.keterangan}}
+                                                </small>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                    <span ng-show="formEdit.cmbHrProfile.$error.required" style="float:right; color:white" class="help-block label label-danger">Pilih Salah Satu</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                </form>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" ng-disabled="isClean() || formEdit.$invalid" ng-click="save()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
